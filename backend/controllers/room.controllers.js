@@ -1,4 +1,4 @@
-import Room from "../models/room.models";
+import Room from "../models/room.models.js";
 
 export const createRoom = async (req, res) => {
     const existingRoom = await Room.findOne();
