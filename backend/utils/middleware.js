@@ -1,27 +1,27 @@
 import { verify } from "jsonwebtoken";
 import User from "../models/user.models";
 
-export const checkAuth = (req, res, next) => {
+export const checkAuth = async (req, res, next) => {
     try {
-        const token = req.cookies.jwt
+        const token = req.cookies.jwt;
         if (!token) {
-            return res.status(401).json({ message: "Unauthorized, unable to verify JWT"});
+            return res.status(401).json({ message: "Unauthorized, unable to verify JWT" });
         }
 
         const verified = verify(token, process.env.JWT_SECRET);
-        if(!verified){
-            return res.status(401).json({ message: "Unauthorized, unable to verify JWT"});
+        if (!verified) {
+            return res.status(401).json({ message: "Unauthorized, unable to verify JWT" });
         }
 
-        const user = User.findById(verified.id).select("-password");
-        if(!user){
-            return res.status(401).json({ message: "No Such Users"});
+        const user = await User.findById(verified.id).select("-password"); // Await here
+        if (!user) {
+            return res.status(401).json({ message: "No Such User" });
         }
 
         req.user = user;
         next();
-    }catch(error){
-        console.log(error);
-        console.log("Error in Verifying JWT");
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Error in Verifying JWT" }); // Send error response
     }
-}
+};

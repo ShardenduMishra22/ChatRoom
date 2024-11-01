@@ -2,10 +2,6 @@ import mongoose from "mongoose";
 
 const roomSchema = mongoose.Schema(
     {
-        name: {
-            type: String,
-            required: true
-        },
         participants: [
             {
                 type: mongoose.Schema.Types.ObjectId,

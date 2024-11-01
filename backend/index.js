@@ -1,3 +1,4 @@
+import userRoutes from "./routes/user.routes.js";
 import express, { urlencoded } from "express";
 import cookieParser from "cookie-parser"; 
 import dotenv from "dotenv";
@@ -16,7 +17,7 @@ app.use(cors({
 
 // Routes Go Here
 
-
+app.use("/api/users", userRoutes);
 
 // Routes End Here
 

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
-import { hashSync } from "bcryptjs";
+import pkg from "bcryptjs";
+const { hashSync } = pkg;
 
 const userSchema = mongoose.Schema(
     {
