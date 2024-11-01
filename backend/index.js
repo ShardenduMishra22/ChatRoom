@@ -1,9 +1,10 @@
-import userRoutes from "./routes/user.routes.js";
 import express, { urlencoded } from "express";
 import cookieParser from "cookie-parser"; 
 import dotenv from "dotenv";
 import { db } from "./db/db.js";
 import cors from "cors";
+import userRoutes from "./routes/user.routes.js";
+import messageRoutes from "./routes/message.routes.js";
 
 const app = express();
 
@@ -15,11 +16,8 @@ app.use(cors({
     methods: "GET,POST",
 }));
 
-// Routes Go Here
-
 app.use("/api/users", userRoutes);
-
-// Routes End Here
+app.use("/api/messages", messageRoutes);
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;
