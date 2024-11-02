@@ -3,6 +3,7 @@ import User from "../models/user.models";
 
 export const checkAuth = async (req, res, next) => {
     try {
+        console.log("Check Middleware - 1")
         const token = req.cookies.jwt;
         if (!token) {
             return res.status(401).json({ message: "Unauthorized, unable to verify JWT" });

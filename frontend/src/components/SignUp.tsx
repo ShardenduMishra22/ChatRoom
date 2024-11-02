@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FC, FormEvent, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Lock, Mail, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
+import axios from 'axios';
 
 interface SignUpFormData {
   fullName: string;
@@ -39,29 +41,17 @@ const SignUp: FC = () => {
     }
 
     try {
-      const response = await fetch('/api/users/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          name: formData.fullName,
-          email: formData.email,
-          password: formData.password
-        })
+      const response = await axios.post('http://localhost:3000/api/users/signup', {
+        name: formData.fullName,
+        email: formData.email,
+        password: formData.password
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        setSuccessMessage('User created successfully');
-        console.log(data.user); // To see the user details, including the avatar
-      } else {
-        setErrorMessage(data.message || 'Failed to create user');
-      }
-    } catch (error) {
-      console.error('An error occurred during sign up:', error)
-      setErrorMessage('An error occurred during sign up');
+      setSuccessMessage('User created successfully');
+      console.log(response.data.user);
+    } catch (error: any) {
+      console.error('An error occurred during sign up:', error);
+      setErrorMessage(error.response?.data?.message || 'Failed to create user');
     }
   };
 

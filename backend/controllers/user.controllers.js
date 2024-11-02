@@ -40,7 +40,7 @@ export const signin = async (req, res) => {
 
         const user = await User.findOne({ // Corrected method name
             email
-        });
+        })
 
         if (!user) {
             return res.status(400).json({
