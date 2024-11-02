@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 import pkg from "bcryptjs";
 const { hashSync } = pkg;
 
+// Function to generate a random avatar URL
+const generateAvatarUrl = (seed) => {
+    return `https://api.dicebear.com/9.x/lorelei/svg?seed=${seed}`;
+};
+
 const userSchema = mongoose.Schema(
     {
         name: {
@@ -10,11 +15,18 @@ const userSchema = mongoose.Schema(
         },
         email: {
             type: String,
-            required: true
+            required: true,
+            unique: true // Ensure email uniqueness
         },
         password: {
             type: String,
             required: true
+        },
+        avatar: {
+            type: String,
+            default: function() {
+                return generateAvatarUrl(this.email);
+            }
         },
     },
     {
