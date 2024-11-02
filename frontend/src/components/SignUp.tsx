@@ -20,14 +20,14 @@ const SignUp: FC = () => {
     confirm_password: ''
   });
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [successMessage, setSuccessMessage] = useState<string>('');
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
-    // Reset the error message
-    setErrorMessage('');
 
-    // Validation
+    setErrorMessage('');
+    setSuccessMessage('');
+
     if (!formData.fullName || !formData.email || !formData.password || !formData.confirm_password) {
       setErrorMessage('All fields are required.');
       return;
@@ -38,10 +38,31 @@ const SignUp: FC = () => {
       return;
     }
 
-    // Additional validation logic (e.g., email format) can be added here
+    try {
+      const response = await fetch('/api/users/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: formData.fullName,
+          email: formData.email,
+          password: formData.password
+        })
+      });
 
-    // Add your sign up logic here
-    console.log('Sign up attempt:', formData);
+      const data = await response.json();
+
+      if (response.ok) {
+        setSuccessMessage('User created successfully');
+        console.log(data.user); // To see the user details, including the avatar
+      } else {
+        setErrorMessage(data.message || 'Failed to create user');
+      }
+    } catch (error) {
+      console.error('An error occurred during sign up:', error)
+      setErrorMessage('An error occurred during sign up');
+    }
   };
 
   return (
@@ -58,6 +79,7 @@ const SignUp: FC = () => {
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
             {errorMessage && <div className="text-red-500 text-sm">{errorMessage}</div>}
+            {successMessage && <div className="text-green-500 text-sm">{successMessage}</div>}
             <div className="space-y-2">
               <div className="relative">
                 <User className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
